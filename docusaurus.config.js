@@ -5,20 +5,20 @@ module.exports = {
   baseUrl: '/',
   onBrokenLinks: 'throw',
   favicon: 'img/favicon.ico',
-  organizationName: 'albertcito', // Usually your GitHub org/user name.
-  projectName: 'albertcito', // Usually your repo name.
+  organizationName: 'albertcito', // GitHub username.
+  projectName: 'albertcito.com', // repo name.
   themeConfig: {
     navbar: {
       title: 'Albert Tjornehoj',
       items: [
-       /*  {
-          to: 'blog', 
-          label: 'Blog', 
-          position: 'left',
-        }, */
         {
-          to: '#footer', 
-          label: 'Contact', 
+          to: 'blog',
+          label: 'Blog',
+          position: 'left',
+        },
+        {
+          to: '#footer',
+          label: 'Contact',
           position: 'left',
         },
         {
@@ -67,10 +67,6 @@ module.exports = {
             {
               label: 'Blog',
               to: 'blog',
-            },
-            {
-              label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
             },
           ],
         },

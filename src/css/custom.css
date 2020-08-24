@@ -39,8 +39,8 @@ body {
 }
 
 .center .smallGray {
-    margin-bottom: 10px;
-  }
+  margin-bottom: 10px;
+}
 
 .smallGray {
   opacity: 0.5;
@@ -61,4 +61,9 @@ body {
   font-weight: 400;
   line-height: 1.6;
   font-size: 20px;
+}
+
+.imageContainer {
+  font-size: 13px;
+  color: #777;
 }
