@@ -4,6 +4,7 @@ import Layout from '@theme/Layout';
 import styles from './styles.module.css';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 
 const AboutMe = () => <div className={clsx('container')}>
   <div className='center smallContent'>
@@ -12,18 +13,18 @@ const AboutMe = () => <div className={clsx('container')}>
       Full Stack Developer
     </h2>
     <p className='contentText'>
-      I have a bachelor’s degree in Computer Engineer 
+      I have a bachelor’s degree in Computer Engineer
       from <Link to='http://international.uach.cl/'>
         University Austral of Chile
       </Link>.
     </p>
     <p className='contentText'>
-      I love programming and I am very excited to 
-      create good code and architecture. My code is 
-      clear and flexible, easy to read and understandable 
-      for other people. I like to create excellent quality 
-      software that is easy to maintain and scale. The 
-      user should have a very good experience 
+      I love programming and I am very excited to
+      create good code and architecture. My code is
+      clear and flexible, easy to read and understandable
+      for other people. I like to create excellent quality
+      software that is easy to maintain and scale. The
+      user should have a very good experience
       with the final product.
     </p>
   </div>
@@ -79,24 +80,24 @@ const Experience = () => <div className="container">
     <div className={clsx('col','col--4', styles.homePosition)}>
       <h3>Software Engineer</h3>
       <div className={styles.homePositionCompany}>
-        Le Cordon Bleu | 
+        Le Cordon Bleu |
         2017 - 2019
       </div>
       <p>
-        As part of the Development Team in <Link 
+        As part of the Development Team in <Link
           to="https://www.cordonbleu.edu/usa/home/en"
           title="Go to Le Cordon Bleu webpage"
         >
           Le Cordon Bleu
-        </Link> I 
-        made sure that the Client Relationship Management (CRM) 
-        and the web page were working in optimal conditions. 
-        The main work that I did was to add new features to the 
+        </Link> I
+        made sure that the Client Relationship Management (CRM)
+        and the web page were working in optimal conditions.
+        The main work that I did was to add new features to the
         system and fix issues. I worked with the Quality Assurance
-        Team so that our users could use quality products. In 
+        Team so that our users could use quality products. In
         general I worked with jQuery, Lucee and Microsoft SQL Server.
       </p>
-      
+
     </div>
     <div className={clsx('col','col--4', styles.homePosition)}>
       <h3>Founding Principal</h3>
@@ -106,18 +107,18 @@ const Experience = () => <div className="container">
       <p>
         I was the team leader and worked with a multidisciplinary team to create an educational app for kids.
         I was in charge of the project coordination and that the project was successfully done.
-     
+
         Some technologies used in this project were: Swift,
-        Laravel, Postgress, GraphQL, ReactJS, TypeScript. 
-        The <Link 
+        Laravel, Postgress, GraphQL, ReactJS, TypeScript.
+        The <Link
           to="https://apps.apple.com/us/app/granja-4-a%C3%B1os-prekinder-matem%C3%A1ticas/id1218637527?l=es"
           title="Download Miaum App for iOS"
         >
           original app
-        </Link> was coded in Swift and Java for Android. 
-        Currently I am updating the code to make it works with 
-        Expo React Native and TypeScript. 
-        You can see a demo <Link 
+        </Link> was coded in Swift and Java for Android.
+        Currently I am updating the code to make it works with
+        Expo React Native and TypeScript.
+        You can see a demo <Link
           to='https://expo.io/@albertcito/miaum-beta'
           title="Download Miaum App Beta"
         >
@@ -131,10 +132,10 @@ const Experience = () => <div className="container">
         Independent Consultant | 2010 - 2015
       </div>
       <p>
-        I worked as an independent consultant for more than 5 years 
-        with clients in different areas, implementing software with 
-        the following technologies: MySQL, PHP, JavaScript, CSS, 
-        jQuery, Bootstrap, Zend Framework 2, Wordpress, eCommerce, 
+        I worked as an independent consultant for more than 5 years
+        with clients in different areas, implementing software with
+        the following technologies: MySQL, PHP, JavaScript, CSS,
+        jQuery, Bootstrap, Zend Framework 2, Wordpress, eCommerce,
         WooCommerce, PrestaShop, Photoshop, Adobe Illustrator, among others.
       </p>
     </div>
@@ -146,13 +147,11 @@ function Home() {
   const context = useDocusaurusContext();
   const {siteConfig = {}} = context;
 
-  const description = `I'm a Computer Engineer based in Boston, MA specializing in building 
-  delightful websites, applications, and everything in between.
-  I have 5+ years of experience in web development, 
-  and a solid understanding of web and server infrastructure.`;
   return (
     <Layout
-      description={description}>
+      description={siteConfig.tagline}
+      image={useBaseUrl("img/code-miaum-albert-tjornehoj.jpg")}
+    >
       <header className={styles.header}>
         <div className={styles.bgImage}>
           <div className={clsx('container')} style={{paddingBottom: '70px', }}>

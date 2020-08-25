@@ -18,7 +18,7 @@
 .rrss ul {
   margin: 0;
   padding: 0;
-  
+
   text-align: center;
 }
   .rrss li {
@@ -27,6 +27,7 @@
     width: 20px;
     height: 30px;
     position: relative;
+    margin: 0 8px;
   }
     .rrss li a {
       opacity: 0.5;
@@ -38,4 +39,4 @@
       .rrss li a:hover{
         opacity: 1;
         padding-bottom: 3px;
-      } 
+      }

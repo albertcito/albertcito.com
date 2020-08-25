@@ -7,16 +7,16 @@ image: https://lh4.googleusercontent.com/GnJtblq8JZezKOnenXQkGYn0R-sOGNJy8n7Twzz
 
 import Image from '../components/Image/index.js';
 
-I create a different template for React with React Router 4. The idea is:
+I created a different template for React with React Router 4. The idea is:
 - Code flexible able to manage many layouts.
 - Possibility to choose a different layout for any component or a layout for a group of components.
 - If a user is not logged in the URL’s that required a login, then show the public layout with a login form.
 - If the user is logged and their wants see the public page (like about-us), the layout must be the public layout with the possibility to see the private web page if click in a private URL.
 
 ## View Preview
-<Image 
-  src="https://cdn-images-1.medium.com/max/1600/1*Tp_SStzt1ZLK_wde4d3D3g.gif" 
-  alt="View preview" 
+<Image
+  src="https://cdn-images-1.medium.com/max/1600/1*Tp_SStzt1ZLK_wde4d3D3g.gif"
+  alt="View preview"
   title={<>You can see this working <a href="https://albertcito.github.io/react-template/">live here</a></>}
 />
 
@@ -49,9 +49,9 @@ export enum routeTypes {
 }
 ```
 
-**private**: private pages like profile, edit-profile, etc. If the user isn’t logged then must to show the login page.  
-**public**: public pages like about-us, contact, etc.  
-**session**: session pages like login and sign-up. If the user is logged then must to redirect to the private dashboard.  
+**private**: private pages like profile, edit-profile, etc. If the user isn’t logged then must to show the login page.
+**public**: public pages like about-us, contact, etc.
+**session**: session pages like login and sign-up. If the user is logged then must to redirect to the private dashboard.
 
 ## Routes Template
 
@@ -102,9 +102,9 @@ routesTemplates.map((routesTemplate) => {
 
 ## Auth
 
-Verify the rights and redirection. 
+Verify the rights and redirection.
 
-```typescript 
+```typescript
 // src/start/Auth.tsx
 
 if (isPrivate(type) && !global.logged) {

@@ -21,11 +21,11 @@ module.exports = {
           label: 'Contact',
           position: 'left',
         },
-        {
+        /* {
           href: 'https://github.com/facebook/docusaurus',
           label: 'GitHub',
           position: 'right',
-        },
+        }, */
       ],
     },
     footer: {
