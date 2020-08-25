@@ -40,7 +40,7 @@ function Footer() {
               I will reply as soon as possible.
             </p>
             <Link
-              to="mailto:hello@albertcito.com"
+              to="mailto:me@albertcito.com"
               className='button button--primary'
               style={{color: 'white'}}
             >
