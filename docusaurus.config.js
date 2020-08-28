@@ -73,6 +73,9 @@ module.exports = {
       ],
       copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
     },
+    googleAnalytics: {
+      trackingID: 'UA-175395555-2',
+    },
   },
   presets: [
     [

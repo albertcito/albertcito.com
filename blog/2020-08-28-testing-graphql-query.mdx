@@ -1,0 +1,144 @@
+---
+id: testing-laravel-graphql-query
+title: Testing a Laravel GraphQL Query 
+tags: [php, laravel, graphql, php-testing]
+image: https://cdn-images-1.medium.com/max/1600/1*CjV19FmP2ekRXsnFnkMoPw.png
+---
+
+import Image from '../components/Image/index.js';
+
+In this post I'm going to set up the enviroment to test the queries and mutations, and test the `langs` query. It's the same query created in the previous post [Basic example Laravel + GraphQL](/blog/basic-example-laravel-graphql).
+
+<Image
+  src="https://cdn-images-1.medium.com/max/1600/1*CjV19FmP2ekRXsnFnkMoPw.png"
+  alt="Testing a Laravel GraphQL Query"
+  title="Testing a Laravel GraphQL Query"
+/>
+
+<!--truncate-->
+
+## Configure TestCase
+
+In order to test a query o mutation I'll create three functions in the file [TestCase.php](https://github.com/albertcito/laravel-graphql-api/blob/master/tests/TestCase.php).
+
+### Test public queries or mutations
+
+To verify graphql public endpoint. 
+
+```php
+// tests/TestCase.php
+
+public function assertJsonStructure(
+    string $url,
+    array $params,
+    array $expected
+) {
+    $response = $this->json('post', $url, $params);
+    try {
+        $response->assertStatus(200)->assertJsonStructure($expected);
+    } catch (\Exception $ex) {
+        $this->printDie($params, $expected, $ex, $response);
+    }
+}
+```
+
+### Test private queries or mutations
+
+To verify graphql private endpoint, it need a user logged.
+
+```php
+// tests/TestCase.php
+
+public function assertJsonStructureLogged(
+    string $url,
+    array $params,
+    array $expected,
+    $user = null
+) {
+    if (! $user) {
+        $user = UserUtil::actingAs();
+    }
+    $response = $this->actingAs($user)
+        ->json('post', $url, $params)
+        ->assertStatus(200);
+    try {
+        $response->assertJsonStructure($expected);
+    } catch (\Exception $ex) {
+        $this->printDie($params, $expected, $ex, $response, $user->user_id);
+    }
+}
+```
+
+### Print the error if its fail
+
+If a test fail, it's easy debug in this way. 
+
+```php
+// tests/TestCase.php
+
+private function printDie($params, $expected, \Exception $ex, $response, $user_id = null)
+{
+    $content = substr($response->getContent(), 0, 1500);
+    $trace = debug_backtrace();
+    $error = [
+        'class' => static::class.'::'.$trace[2]['function'],
+        'params' => $params,
+        'expected' => $expected,
+        'user' => $user_id,
+        'error' => $ex->toString(),
+        'content' => $content,
+    ];
+    dd($error);
+}
+```
+
+## Test LangQuery
+
+This is quere that I used as example in the post [Basic example Laravel + GraphQL](/blog/basic-example-laravel-graphql)
+
+
+```php
+// tests/Feature/Base/LangsQueryTest.php
+
+class LangsQueryTest extends TestCase
+{
+    public function test()
+    {
+        $query = '{
+            langs {
+              data {
+                langID
+                name
+                localName
+                active
+              }
+            }
+        }';
+
+        $expected = [
+            'data' => [
+                'langs' => [
+                    'data' => [
+                        '*' => [
+                            'langID',
+                            'name',
+                            'localName',
+                            'active',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertJsonStructure(
+            '/graphql',
+            [
+                'query' => $query,
+            ],
+            $expected
+        );
+    }
+}
+```
+
+And now, just run `vendor/bin/phpunit` to test the query.
