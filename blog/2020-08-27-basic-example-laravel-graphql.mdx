@@ -1,0 +1,170 @@
+---
+id: basic-example-laravel-graphql
+title: Basic example Laravel + GraphQL
+tags: [php, laravel, graphql]
+image: https://lh4.googleusercontent.com/GnJtblq8JZezKOnenXQkGYn0R-sOGNJy8n7Twzzdj6JcKnMDWW9AtsvhbfG3X_dixs8jYbGgoe8RopGleb8J=w2560-h1450-rw
+---
+
+import Image from '../components/Image/index.js';
+
+[Laravel GraphQL](https://github.com/rebing/graphql-laravel) is a implementation of GraphQL with PHP for Laravel. Very easy to install and use. So the plan in this post is to create `langs` query and see it in Graphiql.
+
+<Image
+  src="https://cdn-images-1.medium.com/max/1600/1*6UZ-T5DS_OuxnWoEND8QSw.png"
+  alt="Langs query working in Laravel GraphQL library"
+  title="Langs query working in Laravel GraphQL library"
+/>
+
+<!--truncate-->
+
+## 1. Install library:
+
+- [Laravel GraphQL](https://github.com/rebing/graphql-laravel) library.
+
+## 2. Create the migration and the model: 
+
+### Create the Migration
+
+I'm using PostgreSQL.
+
+```php
+// database/migrations/2014_02_24_195921_Lang.php
+
+Schema::create('lang.lang', function (Blueprint $table) {
+    $table->string('lang_id', 50)->primary();
+    $table->string('name')->unique();
+    $table->string('local_name')->unique();
+    $table->boolean('active')->default(false);
+    $table->boolean('is_blocked')->default(false);
+
+    $table->integer('created_by')->nullable();
+    $table->integer('updated_by')->nullable();
+    $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+    $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+});
+
+DB::table($this->tableName)->insert([
+    ['lang_id' => 'EN', 'name' => 'English', 'local_name' => 'English', 'active' => true],
+    ['lang_id' => 'ES', 'name' => 'Spanish', 'local_name' => 'Español', 'active' => true],
+]);
+```
+
+### Create the Model
+
+I created the class BaseModel to save the `created_by` and `updated_by` fields in the database.
+
+```php
+// app/Base/Model/Lang/Lang.php
+
+class Lang extends BaseModel
+{
+    public $incrementing = false;
+
+    protected $table = 'lang.lang';
+
+    protected $primaryKey = 'lang_id';
+
+    protected $fillable = [
+        'lang_id',
+        'name',
+        'local_name',
+        'active',
+        'is_blocked',
+        'created_by',
+    ];
+}
+```
+
+## 3. Create the GraphQL Lang Type
+
+This file has the columns to return as the JSON variables. You can see [whole file](https://github.com/albertcito/laravel-graphql-api/blob/master/app/Base/GraphQL/Type/LangType.php) in github.
+
+```php
+// app/Base/GraphQL/Type/LangType.php
+
+protected $attributes = [
+    'name'        => 'LangType',
+    'description' => 'A Lang type',
+];
+
+public function fields() : array
+{
+    return [
+        'langID'    => [
+            'type'        => Type::nonNull(Type::string()),
+            'description' => 'The lang ID',
+            'alias' => 'lang_id',
+        ],
+        'name'      => [
+            'type'        => Type::nonNull(Type::string()),
+            'description' => 'The lang name (english, spanish...)',
+        ],
+        ...
+    ];
+}
+```
+
+## 4. Create the query
+
+This is the basic example to return all the columns of the `lang.lang` table.
+
+```php
+class LangsQuery extends Query
+{
+    protected $attributes = [
+        'name'        => 'langs',
+        'description' => 'A query to get the Langs',
+    ];
+
+    public function type(): Type
+    {
+        return GraphQL::listOf('LangType');
+    }
+
+    public function args(): array
+    {
+        return [];
+    }
+
+    public function resolve($root, array $args)
+    {
+        return Lang::all();
+    }
+}
+```
+
+## 5. Add the query and type to the config file
+
+```php
+// config/graphql.php
+...
+'schemas' => [
+    'default' => [
+        'query' => [
+            App\Base\GraphQL\Publics\Query\LangsQuery::class,
+        ],
+        'mutation' => [],
+        'middleware' => [],
+        'method' => ['get', 'post'],
+    ],
+],
+'types' => [
+    \App\Base\GraphQL\Type\LangType::class,
+]
+...
+```
+
+Now you can go to <http://127.0.0.1:8000/graphiql/> and run the query and see the DB values in JSON format.
+
+```graphql
+{
+  langs {
+    langID
+    name
+    localName
+    active 
+  }
+}
+```
+
+This is a very basic query. To make it better you have to work with the arguments and pagination. I already did it, so if you go to my [laravel-graphql-api](https://github.com/albertcito/laravel-graphql-api) repository you can see it.
