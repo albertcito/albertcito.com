@@ -1,0 +1,209 @@
+---
+id: authentication-laravel-graphql-1
+title: Authentication Laravel + GraphQL
+tags: [php, laravel, graphql]
+image: https://cdn-images-1.medium.com/max/1600/1*7rphbEOTnUamQqNErlKs0g.png
+---
+
+import Image from '../components/Image/index.js';
+
+In my [previous post](/blog/basic-example-laravel-graphql) I published a basic example with Laravel + GraphQL. The current post is to create the login query.
+
+<Image
+  src="https://cdn-images-1.medium.com/max/1600/1*7rphbEOTnUamQqNErlKs0g.png"
+  alt="Authentication Laravel + GraphQL"
+  title="Authentication Laravel + GraphQL"
+/>
+
+<!--truncate-->
+
+## 1. Install Passport
+
+This example works with [Laravel Passport](https://laravel.com/docs/master/passport), you can go [here](https://laravel.com/docs/master/passport) to see the instruction to install it. 
+
+## 2. Create the UserType
+I'm working with `user_id` as primary key for the [table user](https://github.com/albertcito/laravel-graphql-api/blob/master/database/migrations/2014_10_12_000000_User.php). So, the first step is create the GraphQL [UserType](https://github.com/albertcito/laravel-graphql-api/blob/master/app/Base/GraphQL/Type/UserType.php).
+
+```php
+// app/Base/GraphQL/Type/UserType.php
+
+class UserType extends GraphQLType
+{
+    protected $attributes = [
+        'name'        => 'UserType',
+        'description' => 'A type of User',
+    ];
+
+    public function fields() : array
+    {
+        return [
+            'userID'        => [
+                'type'        => Type::nonNull(Type::int()),
+                'description' => 'User identification, primary key',
+                'alias' => 'user_id',
+            ],
+            'langID'        => [
+                'type'        => Type::nonNull(Type::string()),
+                'description' => 'User language',
+                'alias' => 'lang_id',
+            ],
+            'name'          => [
+                'type'        => Type::nonNull(Type::string()),
+                'rules'       => ['min:3'],
+                'description' => 'User name',
+            ],
+            'email'         => [
+                'type'        => Type::nonNull(Type::string()),
+                'rules'       => ['min:3'],
+                'description' => 'User email',
+            ],
+            'accessToken'   => [
+                'type'        => Type::string(),
+                'description' => 'Session api token passport',
+            ],
+            ...
+        ];
+    }
+}
+```
+
+## 3. Create the login query
+
+This query receive two params `email` and `password`. And return the user DB values + accesToken.
+
+```php
+// app/Base/GraphQL/Publics/Query/UserLoginQuery.php
+
+class UserLoginQuery extends Query
+{
+    protected $attributes = [
+        'name'        => 'login',
+        'description' => 'A query to login a user, return a user + accessToken',
+    ];
+
+    public function type(): Type
+    {
+        return GraphQL::type('UserType');
+    }
+
+    public function args(): array
+    {
+        return [
+            'email'    => [
+                'name'  => 'email',
+                'type'  => Type::string(),
+                'rules' => [
+                    'required',
+                    'email',
+                ],
+            ],
+            'password' => [
+                'name'  => 'password',
+                'type'  => Type::string(),
+                'rules' => [
+                    'required',
+                    'string',
+                ],
+            ],
+        ];
+    }
+
+    public function resolve($root, $args)
+    {
+        return (new LoginLogic(
+            $args['email'],
+            $args['password']
+        ))->login();
+    }
+}
+
+```
+
+## 4. The Login class
+
+This is a basic login class, in the [code](https://github.com/albertcito/laravel-graphql-api) it was optimized to make it more scalable.
+
+```php
+// app/Base/Logic/User/LoginLogic.php
+
+class LoginLogic
+{
+    private string $email;
+    private string $password;
+
+    public function __construct(string $email, string $password)
+    {
+        $this->email = $email;
+        $this->password = $password;
+    }
+
+    public function login()
+    {
+        if (Auth::check()) {
+            throw new MessageError(__('user.logged_already'));
+        }
+
+        $user = User::where(['email' => $this->email])->first();
+
+        if (! $user || ! Hash::check($this->password, $user->password)) {
+            throw new MessageError(__('user.login_wrong'));
+        }
+
+        if (! UserStatus::ACTIVE()->isEqual($user->user_status_id)) {
+            throw new MessageError(__('user.no_active'));
+        }
+
+        $user['accessToken'] = $user->createToken('Albertcito.com')->accessToken;
+
+        return $user;
+    }
+}
+```
+
+## 5. Add the query and type
+
+In order to make it available, we need to add the query and the type in the graphql configuration file.
+
+```php
+// config/graphql.php
+
+'schemas' => [
+    'default' => [
+        'query' => [
+            App\Base\GraphQL\Publics\Query\LangsQuery::class,
+            App\Base\GraphQL\Publics\Query\LoginQuery::class,
+        ],
+        'mutation' => [],
+        'middleware' => ['api'],
+        'method' => ['post'],
+    ],
+],
+'types' => [
+    \App\Base\GraphQL\Type\LangType::class,
+    \App\Base\GraphQL\Type\UserType::class,
+]
+```
+
+## 6. Run the query
+
+Now you can go to <http://127.0.0.1:8000/graphiql/> and run the query and see the DB values in JSON format.
+
+```graphql
+query login($email: String, $password: String) {
+  login(email: $email, password: $password) {
+    userID
+    name
+    accessToken
+  }
+}
+```
+
+Variables: 
+```json
+{
+  "email": "me@albertcito.com",
+  "password": 123456
+}
+```
+
+This is just a login query. I will post soon how to use it. If you would like to see the code, please go to my [github](https://github.com/albertcito/laravel-graphql-api).

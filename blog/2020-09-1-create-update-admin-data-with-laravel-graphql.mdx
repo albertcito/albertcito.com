@@ -1,0 +1,83 @@
+---
+id: run-private-queries-with-laravel-graphiql
+title: Run private queries with Laravel + GraphiQL
+tags: [php, laravel, graphql]
+image: https://albertcito.com/img/blog/Laravel-GraphQL-ModHeader-Authentication.png
+---
+
+import Image from '../components/Image/index.js';
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+In my [previous post](/blog/authentication-laravel-graphql-1) I published how to authenticate with Laravel + GraphQL. The current post is to know how run a private query using Graph*i*QL.
+
+<Image
+  src="/img/blog/Laravel-GraphQL-ModHeader-Authentication.png"
+  alt="Authentication Laravel + GraphQL using ModHeader and GraphiQL"
+  title="Authentication Laravel + GraphQL using ModHeader and GraphiQL"
+/>
+
+<!--truncate-->
+
+## 1. Create the Admin area
+
+We need to add a new schema in the graphql config file. The new schema need to use `auth:api` middleware to allow only registered users use the queries. 
+
+```php
+// config/graphql.php
+
+'schemas' => [
+    'default' => [
+        'query' => [
+            App\Base\GraphQL\Publics\Query\LangsQuery::class,
+            App\Base\GraphQL\Publics\Query\LoginQuery::class,
+        ],
+        'mutation' => [],
+        'middleware' => ['api'],
+        'method' => ['post'],
+    ],
+    'admin' => [
+        'query' => [],
+        'mutation' => [],
+        'middleware' => ['auth:api'],
+        'method' => ['post'],
+    ],
+],
+'types' => [
+    \App\Base\GraphQL\Type\UserType::class,
+    \App\Base\GraphQL\Type\LangType::class,
+]
+```
+
+## 1. Install ModHeader
+
+You can download the extension [here](https://bewisse.com/modheader/) and you can install it in almost any browser: Chrome, Firefox, others.
+
+## 2. Get the token
+
+Now you can go to http://127.0.0.1:8000/graphiql/ and run the query and copy the `accessToken`.
+```graphql
+query login($email: String, $password: String) {
+  login(email: $email, password: $password) {
+    userID
+    name
+    accessToken
+  }
+}
+```
+With variables: 
+```json
+{
+  "email": "me@albertcito.com",
+  "password": 123456
+}
+```
+
+## 3. Add the token in ModHeader
+
+Click in the extension icon in your browser. 
+- Add a new request header and complete the fields: 
+   - Name: `Authorization`.
+   - Value: `Bearer $accessToken` ($accessToken is the value copied in the step 2).
+- Click in the button play.
+
+Now go to http://127.0.0.1:8000/graphiql/admin and you will be able to see the private area and run any query or mutation. You can see it working with more data in my [github](https://github.com/albertcito/laravel-graphql-api).

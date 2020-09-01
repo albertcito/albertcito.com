@@ -7,7 +7,7 @@ image: https://cdn-images-1.medium.com/max/1600/1*CjV19FmP2ekRXsnFnkMoPw.png
 
 import Image from '../components/Image/index.js';
 
-In this post I'm going to set up the enviroment to test the queries and mutations, and test the `langs` query. It's the same query created in the previous post [Basic example Laravel + GraphQL](/blog/basic-example-laravel-graphql).
+In this post I'm going to set up the environment to test the queries and mutations, and test the `langs` query. It's the same query created in the previous post [Basic example Laravel + GraphQL](/blog/basic-example-laravel-graphql).
 
 <Image
   src="https://cdn-images-1.medium.com/max/1600/1*CjV19FmP2ekRXsnFnkMoPw.png"
@@ -141,4 +141,6 @@ class LangsQueryTest extends TestCase
 }
 ```
 
-And now, just run `vendor/bin/phpunit` to test the query.
+And now, just run `php artisan test` to test it.
+
+If the query to test need authenticacion, you have to add the trail `use WithoutMiddleware;` from `use Illuminate\Foundation\Testing\WithoutMiddleware;`. You may see it working [here](https://github.com/albertcito/laravel-graphql-api/blob/master/tests/Feature/Base/GraphQL/Admin/Query/Tag/TagsQueryTest.php).
