@@ -1,0 +1,140 @@
+---
+id: handle-failed-server-requests-with-custom-exception-typescript
+title: Handle failed server requests with a custom exception in TypeScript
+tags: [typescript, exception]
+image: https://cdn-images-1.medium.com/max/1600/1*o8nnsLZ16xjX_7uC8ZV_EA.png
+---
+import Image from '../components/Image/index.js';
+
+In this post I want to show you how to handle server errors like 404, 500, 403, etc. Also "Network Connection error" and validation errors u others.
+
+<Image
+  src="/img/blog/network-error.png"
+  alt="Network Error"
+  title="Network Error"
+/>
+
+<!--truncate-->
+
+If we have a endpoint that send data if the request is right: 
+
+```json
+{
+  id: 1,
+  firstName: "Albert",
+  lastName: "Tjornehoj",
+  email: "me@albertcito.com"
+}
+```
+If the request fail, it's like that: 
+
+```
+{
+  error: [
+    'The user id does not exist',
+  ]
+}
+```
+
+## 1. ErrorCodeFormat interface
+
+This is a basic interface that cold be used to get the server errors. 
+
+```typescript
+export interface ErrorCodeFormat {
+  networkError: boolean;
+  code: number;
+  errors: string[];
+}
+```
+
+So in case of validator error the json format will be:
+
+```json
+{
+  networkError: false,
+  code: 200,
+  errors: ['The user id does not exist'],
+}
+```
+
+In case of Network Error or server error, we need to format it: 
+
+```typescript
+const errorFormat = (error: AxiosError): ErrorCodeFormat => ({
+  networkError: (error.message === 'Network Error'),
+  code: error.response?.status,
+  errors: [error.message],
+});
+```
+
+## 2. Exception
+
+Now we need to create the Exception that will help us to identify if it's a validation error.
+
+```typescript
+class ApiError extends Error {
+  constructor(public readonly error: ErrorCodeFormat) {
+    super();
+    Object.setPrototypeOf(this, ApiError.prototype);
+  }
+
+  public getError() {
+    return {
+      networkError: false,
+      code: 200,
+      errors: this.error.error,
+    };
+  }
+}
+```
+
+## 3. Api function
+
+This function get the data from the server and always return a UserFormat or it fail.
+
+```typescript
+const getUser = async (userID: number): UserFormat => {
+  const response = await api.post('/user', { userID });
+  if (payload.data.errors) {
+    throw new ApiError(payload.data.errors);
+  }
+  return response.data;
+}
+```
+
+## 4. Function to request server data
+
+```typescript
+async function requestData<T>(
+  api: () => Promise<T>,
+  onSuccess: (response: T) => void,
+  onFail: (errors: ErrorCodeFormat) => void,
+): Promise<void> {
+  try {
+    const payload = await api();
+    onSuccess(payload);
+  } catch (error) {
+    // This is API error, as validation form.
+    if (error.constructor === ApiError) {
+      onFail(error.getError());
+    } else {
+      // This is network, auth or server http status error
+      onFail(errorFormat(error));
+      // The global function have to handle the error to verify authorization (401)
+      // and close the local session
+      throw error;
+    }
+  }
+}
+```
+
+## 5. Try it
+
+```typescript
+requestData<UserFormat>(
+  () => getUser(1),
+  (user) => console.log('That works fine 🎉', user),
+  (error) => console.log('Something wrong happened 😱', error),
+);
+```
