@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[6],{60:function(a){a.exports=JSON.parse('{"allTagsPath":"/blog/tags","slug":"laravel","name":"laravel","count":4,"permalink":"/blog/tags/laravel"}')}}]);
