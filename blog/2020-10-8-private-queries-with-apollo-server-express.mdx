@@ -1,0 +1,90 @@
+---
+slug: private-queries-with-apollo-server-express
+title: Private queries with Apollo Server and Express
+tags: [apollo-server, expressjs, error 401, typescript, exception]
+image: https://albertcito.com/img/blog/auth-graphql.png
+---
+import Image from '../components/Image/index.js';
+
+The GraphQL Spec that defines [how errors should be handled](http://spec.graphql.org/draft/#sec-Errors). That means Apollo Server cannot send 401 server error, each request sent http status 200. Even if you have an authenticate issue, it  will return a JSON with http status 200. My plan to handle it is to create two shemas, one private and one public.
+
+<Image
+  src="/img/blog/auth-graphql.png"
+  alt="Apollo Server query with authenticate user"
+  title="Apollo Server query with authenticate user"
+/>
+
+<!--truncate-->
+
+## Apollo Server middleware problem
+
+The [type-graphql](https://typegraphql.com/docs/middlewares.html#attaching-middleware) middleware will return an http status 200 with a JSON with the UNAUTHENTICATED error code.
+
+```typescript {4}
+@Resolver()
+class UserResolver {
+  @Query(() => [User])
+  @UseMiddleware(isAuth)
+  users() {
+    return User.find();
+  }
+}
+```
+
+## Create Apollo Server Schema
+
+This is the private schema. The line 3 has the route for the private queries and mutations. The line 9 has the path name, it means the endpoint will be in `locahost:4000/graphql/private`. For the public you have to do the same, change the resolvers path and the path. In my case I have `/graphql/private`for the private resolvers and `/graphql/public` for the public ones.
+
+```typescript {3,9}
+const server = async (app: Express) => {
+  const apolloSchema = await buildSchema({
+    resolvers: [path.join(__dirname, '../../../graphql/private/**/*.ts')],
+    validate: false,
+  });
+  const apolloServer = new ApolloServer({ schema: apolloSchema });
+  apolloServer.applyMiddleware({
+    app,
+    path: '/graphql/private',
+  });
+};
+```
+
+## Create Middleware
+
+This is the middleware to block `/graphql/private` from unauthenticated users. Unfortunately, the "application-level middleware" in ExpressJS [does not show](https://github.com/expressjs/express/blob/master/lib/router/layer.js#L111) all application information within middleware. But, at least I found a way to see the current request url.
+
+```typescript
+const isAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+  const url = req.params[0] ?? '';
+  if (url !== '/graphql/private') {
+    next();
+    return;
+  }
+  getUserByOauthToken(req).then((user) => {
+    Auth.setUser(user);
+    next();
+  }).catch((error) => {
+    if (error instanceof AuthenticationError) {
+      res.status(401).send({ message: error.message });
+    } else {
+      res.status(500).send({ message: error.message });
+    }
+  });
+};
+```
+
+## Add the GraphQL server and Middleware to Express
+
+This is the express app, the private and public Apollo Server was added. And the `isAuthMiddleware` to allow authenticated users only for the url `graphql/private`.
+
+```typescript
+const getApp = async (): Promise<Express> => {
+  const app = express();
+  app.use('*', isAuthMiddleware);
+  await privateServer(app);
+  await publicServer(app);
+  return app;
+};
+```
+
+Finally the solution was to create a private Apollo Server schema, only allow requests for authenticated users. That means that all queries and mutations in that schema will be private. You can see the code in my [repo](https://github.com/albertcito/nodejs-web-typescript).
