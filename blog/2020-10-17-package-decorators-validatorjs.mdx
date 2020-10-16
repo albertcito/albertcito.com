@@ -1,0 +1,93 @@
+---
+slug: package-decorators-validatorjs
+title: Package to use decorators with validatorJS
+tags: [decorator, typescript, validatorJS]
+image: https://albertcito.com/img/blog/auth-graphql.png
+---
+
+I just created a [package](https://www.npmjs.com/package/validatorjs-decorators) that work with [validatorJS](https://github.com/skaterdav85/validatorjs) and Typescript [decorators](https://www.typescriptlang.org/docs/handbook/decorators.html) to validate your classes. 
+
+<!--truncate-->
+
+## Validation inside function
+
+I was validating the parameters of the function get in one of this way. 
+
+```typescript {9-18}
+class Paginate<T> {
+  private readonly query: SelectQueryBuilder<T>;
+
+  constructor(query: SelectQueryBuilder<T>) {
+    this.query = query;
+  }
+
+  async get(limit: number, page: number) {
+    const errors = await getFieldErrors(
+      { limit, page }, 
+      { 
+        limit: 'required|integer|min:1', 
+        page: 'required|integer|min:1',
+      },
+    );
+    if (errors) {
+      throw new ValidatorError(errors);
+    }
+    const total = await this.query.getCount();
+    ...
+  }
+}
+```
+## Validation using decorator
+
+### Validate a class function
+
+It works well, but I  decorators make it looks clean and easy to read:
+
+```typescript {8,10-11}
+class Paginate<T> {
+  private readonly query: SelectQueryBuilder<T>;
+
+  constructor(query: SelectQueryBuilder<T>) {
+    this.query = query;
+  }
+  
+  @validateAsync()
+  async get(
+    @arg('limit', 'required|integer|min:1') limit: number,
+    @arg('page', 'required|integer|min:1') page: number,
+  ) {
+    const total = await this.query.getCount();
+    ...
+  }
+}
+```
+
+### Validate a class constructor and properties
+
+Also, it works for `constructor` or properties:
+
+```typescript {1,3,9-10}
+@validateClass()
+class Example {
+  @prop('email')
+  public readonly email: string;
+
+  public readonly password: string;
+
+  constructor(
+    @arg('email', 'email|required') email: string,
+    @arg('password', 'string|required') password: string,
+  ) {
+    this.email = email;
+    this.password = password;
+  }
+}
+```
+## Install
+
+To install run one of this instructions: 
+
+- `npm install validatorjs-decorators`
+- `yarn add  validatorjs-decorators`
+
+All the rules availables are in the [validatorJS](https://github.com/skaterdav85/validatorjs) repository. The code of validatorjs-decorators package is in my [github](https://github.com/albertcito/validatorjs-decorators). 
