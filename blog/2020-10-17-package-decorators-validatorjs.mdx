@@ -2,16 +2,23 @@
 slug: package-decorators-validatorjs
 title: Package to use decorators with validatorJS
 tags: [decorator, typescript, validatorJS]
-image: https://albertcito.com/img/blog/auth-graphql.png
+image: https://albertcito.com/img/blog/validatorjs-decorator.png
 ---
+import Image from '../components/Image/index.js';
 
-I just created a [package](https://www.npmjs.com/package/validatorjs-decorators) that work with [validatorJS](https://github.com/skaterdav85/validatorjs) and Typescript [decorators](https://www.typescriptlang.org/docs/handbook/decorators.html) to validate your classes. 
+I just created a [package](https://www.npmjs.com/package/validatorjs-decorator) that work with [validatorJS](https://github.com/skaterdav85/validatorjs) and Typescript [decorators](https://www.typescriptlang.org/docs/handbook/decorators.html) to validate your classes. 
+
+<Image
+  src="/img/blog/validatorjs-decorator.png"
+  alt="Validation using decorators with validatorjs"
+  title="Validation using decorators with validatorjs"
+/>
 
 <!--truncate-->
 
 ## Validation inside function
 
-I was validating the parameters of the function get in one of this way. 
+I was validating the parameters of the function get in one of this way. It's works but look like the code is unclean. 
 
 ```typescript {9-18}
 class Paginate<T> {
@@ -87,7 +94,7 @@ class Example {
 
 To install run one of this instructions: 
 
-- `npm install validatorjs-decorators`
-- `yarn add  validatorjs-decorators`
+- `npm install validatorjs-decorator`
+- `yarn add  validatorjs-decorator`
 
-All the rules availables are in the [validatorJS](https://github.com/skaterdav85/validatorjs) repository. The code of validatorjs-decorators package is in my [github](https://github.com/albertcito/validatorjs-decorators). 
+All the rules availables are in the [validatorJS](https://github.com/skaterdav85/validatorjs) repository. The code of validatorjs-decorators package is in my [github](https://github.com/albertcito/validatorjs-decorator). 
