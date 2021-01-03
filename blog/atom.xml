@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://albertcito.com/blog</id>
+    <title>Albert Tjornehoj Blog</title>
+    <updated>2021-01-03T00:00:00.000Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://albertcito.com/blog"/>
+    <subtitle>Albert Tjornehoj Blog</subtitle>
+    <icon>https://albertcito.com/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Private queries with Apollo Server and Express]]></title>
+        <id>private-queries-with-apollo-server-express</id>
+        <link href="https://albertcito.com/blog/private-queries-with-apollo-server-express"/>
+        <updated>2021-01-03T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[I other post I was using a private and public schema to return 401 http status. But I found a better solution to change the response http status from the server.]]></summary>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Package to use decorators with validatorJS]]></title>
+        <id>package-decorators-validatorjs</id>
+        <link href="https://albertcito.com/blog/package-decorators-validatorjs"/>
+        <updated>2020-10-17T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[I just created a package that work with validatorJS and Typescript decorators to validate your classes.]]></summary>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Public and private schema with Apollo Server and Express]]></title>
+        <id>public-private-schema-with-apollo-server-express</id>
+        <link href="https://albertcito.com/blog/public-private-schema-with-apollo-server-express"/>
+        <updated>2020-10-08T04:00:00.000Z</updated>
+        <summary type="html"><![CDATA[(you can read a better solution here)]]></summary>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Handle failed server requests with a custom exception in TypeScript]]></title>
+        <id>handle-failed-server-requests-with-custom-exception-typescript</id>
+        <link href="https://albertcito.com/blog/handle-failed-server-requests-with-custom-exception-typescript"/>
+        <updated>2020-09-10T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[In this post I want to show you how to handle server errors like 404, 500, 403, etc. Also "Network Connection error" and validation errors u others.]]></summary>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Run private queries with Laravel + GraphiQL]]></title>
+        <id>run-private-queries-with-laravel-graphiql</id>
+        <link href="https://albertcito.com/blog/run-private-queries-with-laravel-graphiql"/>
+        <updated>2020-09-01T04:00:00.000Z</updated>
+        <summary type="html"><![CDATA[In my previous post I published how to authenticate with Laravel + GraphQL. The current post is to know how run a private query using GraphiQL.]]></summary>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Authentication Laravel + GraphQL]]></title>
+        <id>authentication-laravel-graphql-1</id>
+        <link href="https://albertcito.com/blog/authentication-laravel-graphql-1"/>
+        <updated>2020-08-31T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[In my previous post I published a basic example with Laravel + GraphQL. The current post is to create the login query.]]></summary>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Testing a Laravel GraphQL Query]]></title>
+        <id>testing-laravel-graphql-query</id>
+        <link href="https://albertcito.com/blog/testing-laravel-graphql-query"/>
+        <updated>2020-08-28T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[In this post I'm going to set up the environment to test the queries and mutations, and test the langs query. It's the same query created in the previous post Basic example Laravel + GraphQL.]]></summary>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Basic example Laravel + GraphQL]]></title>
+        <id>basic-example-laravel-graphql</id>
+        <link href="https://albertcito.com/blog/basic-example-laravel-graphql"/>
+        <updated>2020-08-27T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Laravel GraphQL is a implementation of GraphQL with PHP for Laravel. Very easy to install and use. So the plan in this post is to create langs query and see it in Graphiql.]]></summary>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Private and Different Layouts with React Router]]></title>
+        <id>private-different-layouts-with-react-router</id>
+        <link href="https://albertcito.com/blog/private-different-layouts-with-react-router"/>
+        <updated>2020-08-24T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[I created a different template for React with React Router 4. The idea is:]]></summary>
+    </entry>
+</feed>
