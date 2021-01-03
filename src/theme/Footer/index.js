@@ -35,7 +35,7 @@ function Footer() {
               Get in touch
             </h1>
             <p className='contentText'>
-              I am currently open to new job opportunities. Please
+              Please
               feel free to contact me with any questions or just to say hello.
               I will reply as soon as possible.
             </p>

@@ -1,0 +1,101 @@
+---
+slug: private-queries-with-apollo-server-express
+title: Private queries with Apollo Server and Express
+tags: [apollo-server, expressjs, error 401, typescript, exception]
+image: https://albertcito.com/img/blog/auth-graphql.png
+---
+import Image from '../components/Image/index.js';
+
+I [other post](/blog/public-private-schema-with-apollo-server-express) I was using a private and public schema to return 401 http status. But I found a better solution to change the response http status from the server.
+
+<Image
+  src="/img/blog/auth-graphql.png"
+  alt="Apollo Server query with authenticate user"
+  title="Apollo Server query with authenticate user"
+/>
+
+<!--truncate-->
+
+## Create Exception
+
+```typescript
+class HttpStatusError extends Error {
+  constructor(
+    public readonly message: string,
+    public readonly code: number = 401,
+  ) {
+    super();
+    Object.setPrototypeOf(this, HttpStatusError.prototype);
+  }
+}
+```
+
+## Create Apollo Middleware
+
+```typescript {4}
+const isAuth: MiddlewareFn<{ req: Request}> = async ({ context: { req } }, next) => {
+  // Your own isAdmin function
+  if (!isAdmin(req)) {
+    throw new HttpStatusError('Not authorized, please login');
+  }
+  return next();
+};
+```
+
+
+## Create query only access for authenticated users
+
+```typescript {4}
+@Resolver()
+class LangDeleteResolver {
+  @Mutation(() => String)
+  @UseMiddleware(isAuth)
+  @Validate({ id: 'required|string' })
+  async langDelete(@Arg('id') id: string): Promise<string> {
+    const lang = await Lang.findOneOrFail(id);
+    await lang.remove();
+    return __('The item %s was removed');
+  }
+}
+```
+
+## Intercept Error in global handle exception
+
+So the `ErrorHandlePlugin` will be the function to determine if the server response http status.
+
+```typescript {10}
+const ErrorHandlePlugin: ApolloServerPlugin = {
+  requestDidStart() {
+    return {
+      willSendResponse(requestContext: GraphQLRequestContextWillSendResponse<ApolloServerContext>) {
+        const errors = requestContext.errors ?? [];
+        // eslint-disable-next-line no-restricted-syntax
+        for (const error of errors) {
+          const { originalError } = error;
+          if (originalError instanceof HttpStatusError) {
+            throw new HttpQueryError(originalError.code, originalError.message, false);
+          }
+          if (originalError && !isValidException(originalError)) {
+            notify(originalError, requestContext.context.req);
+          }
+        }
+      },
+    };
+  },
+};
+```
+
+## Add logic to Apollo Server
+
+```typescript {5}
+const apolloServer = new ApolloServer({
+  schema: apolloSchema,
+  context: ({ req, res }): ApolloServerContext => ({ db, req, res }),
+  formatError,
+  plugins: [ErrorHandlePlugin],
+  playground: true,
+  introspection: true,
+});
+```
+
+You can see the code in my [repo](https://github.com/albertcito/nodejs-web-typescript).

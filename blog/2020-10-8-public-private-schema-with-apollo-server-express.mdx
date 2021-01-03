@@ -1,10 +1,12 @@
 ---
-slug: private-queries-with-apollo-server-express
-title: Private queries with Apollo Server and Express
+slug: public-private-schema-with-apollo-server-express
+title: Public and private schema with Apollo Server and Express
 tags: [apollo-server, expressjs, error 401, typescript, exception]
 image: https://albertcito.com/img/blog/auth-graphql.png
 ---
 import Image from '../components/Image/index.js';
+
+(you can read a better solution [here](/blog/private-queries-with-apollo-server-express))
 
 The GraphQL Spec that defines [how errors should be handled](http://spec.graphql.org/draft/#sec-Errors). That means Apollo Server cannot send 401 server error, each request sent http status 200. Even if you have an authenticate issue, it  will return a JSON with http status 200. My plan to handle it is to create two shemas, one private and one public.
 

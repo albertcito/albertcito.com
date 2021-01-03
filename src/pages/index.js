@@ -52,14 +52,14 @@ const AboutMe = () => <div className={clsx('container')}>
       <li><span>TypeScript</span></li>
       <li><span>React JS</span></li>
       <li><span>React Native</span></li>
+      <li><span>Vue</span></li>
       <li><span>NodeJS</span></li>
       <li><span>ES6</span></li>
       <li><span>Redux</span></li>
       <li><span>SVG</span></li>
-      <li><span>jQuery</span></li>
       <li><span>CSS</span></li>
       <li><span>Sass</span></li>
-      <li><span>Foundation</span></li>
+      <li><span>Tailwindcss</span></li>
       <li><span>Bootstrap</span></li>
       <li><span>AntDesign</span></li>
       <li><span>Photoshop</span></li>
