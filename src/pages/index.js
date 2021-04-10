@@ -31,6 +31,19 @@ const AboutMe = () => <div className={clsx('container')}>
 
   <div className={clsx(styles.homeStackTags, 'center')}>
     <ul>
+      <li><span>Javascript</span></li>
+      <li><span>TypeScript</span></li>
+      <li><span>React JS</span></li>
+      <li><span>React Native</span></li>
+      <li><span>Vue</span></li>
+      <li><span>NodeJS</span></li>
+      <li><span>ES6</span></li>
+      <li><span>Redux</span></li>
+      <li><span>SVG</span></li>
+      <li><span>CSS</span></li>
+      <li><span>Sass</span></li>
+      <li><span>Tailwindcss</span></li>
+      <li><span>Bootstrap</span></li>
       <li><span>PHP</span></li>
       <li><span>Laravel</span></li>
       <li><span>Wordpress</span></li>
@@ -48,19 +61,6 @@ const AboutMe = () => <div className={clsx('container')}>
       <li><span>Continous Delivery</span></li>
       <li><span>RSA SSH</span></li>
       <li><span>Git</span></li>
-      <li><span>Javascript</span></li>
-      <li><span>TypeScript</span></li>
-      <li><span>React JS</span></li>
-      <li><span>React Native</span></li>
-      <li><span>Vue</span></li>
-      <li><span>NodeJS</span></li>
-      <li><span>ES6</span></li>
-      <li><span>Redux</span></li>
-      <li><span>SVG</span></li>
-      <li><span>CSS</span></li>
-      <li><span>Sass</span></li>
-      <li><span>Tailwindcss</span></li>
-      <li><span>Bootstrap</span></li>
       <li><span>AntDesign</span></li>
       <li><span>Photoshop</span></li>
       <li><span>Adobe Illustrator</span></li>
@@ -70,14 +70,29 @@ const AboutMe = () => <div className={clsx('container')}>
 </div>;
 
 const Experience = () => <div className="container">
-<div className='center smallContent'>
-  <div className='smallGray'>Where I've Worked </div>
-  <h2 className='pageH2'>
-    Previous Experience
-  </h2>
-</div>
-<div className="row">
-    <div className={clsx('col','col--4', styles.homePosition)}>
+  <div className='center smallContent'>
+    <div className='smallGray'>Where I've Worked </div>
+    <h2 className='pageH2'>
+      Previous Experience
+    </h2>
+  </div>
+  <div className="row">
+    <div className={clsx('col','col--3', styles.homePosition)}>
+    <h3>Fullstack Software Engineer</h3>
+      <div className={styles.homePositionCompany}>
+        Gradguard |
+        2020 - present
+      </div>
+      <p>
+      In the company I have been in charge of the implementation of the
+      new administration system for our clients, written in VueJS (TS)
+      and Laravel. I have also collaborated implementing workflow
+      improvements by adding various stages (QA, ACC, PROD) and
+      rules to improve the quality of the source code, such as code
+      style and static analysis for both Typescript and PHP.
+      </p>
+    </div>
+    <div className={clsx('col','col--3', styles.homePosition)}>
       <h3>Software Engineer</h3>
       <div className={styles.homePositionCompany}>
         Le Cordon Bleu |
@@ -97,9 +112,8 @@ const Experience = () => <div className="container">
         Team so that our users could use quality products. In
         general I worked with jQuery, Lucee and Microsoft SQL Server.
       </p>
-
     </div>
-    <div className={clsx('col','col--4', styles.homePosition)}>
+    <div className={clsx('col','col--3', styles.homePosition)}>
       <h3>Founding Principal</h3>
       <div className={styles.homePositionCompany}>
         Miaum | 2016 - 2017
@@ -126,7 +140,7 @@ const Experience = () => <div className="container">
         </Link>.
       </p>
     </div>
-    <div className={clsx('col','col--4', styles.homePosition)}>
+    <div className={clsx('col','col--3', styles.homePosition)}>
       <h3>Full Stack Developer</h3>
       <div className={styles.homePositionCompany}>
         Independent Consultant | 2010 - 2015
